@@ -1,0 +1,7 @@
+Criação do projeto de testes pelo CMD -> dotnet new xunit -o ProjetoTeste.Tests
+
+Adicionando o projeto a sln -> dotnet sln add ./ProjetoTeste.Tests/ProjetoTeste.Tests.csproj
+
+Reconheça o código que será alvo do teste -> dotnet add ./ProjetoTeste.Tests/ProjetoTeste.Tests.csproj reference ./ProjetoAlvoTeste/ProjetoAlvoTeste.csproj
+
+Executando os testes pelo console -> dotnet test
