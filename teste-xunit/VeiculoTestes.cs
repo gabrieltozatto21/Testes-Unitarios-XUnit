@@ -1,12 +1,45 @@
 using Alura.Estacionamento.Alura.Estacionamento.Modelos;
 using Alura.Estacionamento.Modelos;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Xunit;
 
 namespace teste_xunit
 {
-    public class VeiculoTestes
+    public class VeiculoTestes:IEnumerable<object[]>
     {
+        public IEnumerator<object[]> GetEnumerator()
+        {
+            yield return new object[]
+            {
+                new Veiculo
+                {
+                    Proprietario = "André Silva",
+                    Placa = "ASD-9999",
+                    Cor="Verde",
+                    Modelo="Fusca"
+                }
+            };
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        [Theory]
+        [ClassData(typeof(VeiculoTestes))]
+        public void TestaVeiculoClass(Veiculo modelo)
+        {
+            //Arrange
+            var veiculo = new Veiculo();
+
+            //Act
+            veiculo.Acelerar(10);
+            modelo.Acelerar(10);
+
+            //Assert
+            Assert.Equal(modelo.VelocidadeAtual, veiculo.VelocidadeAtual);
+        }
+
         [Fact(DisplayName ="Teste aceleração do veiculo")]
         //agrupador de testes
         [Trait("Funcionalidade", "Acelerar")]
