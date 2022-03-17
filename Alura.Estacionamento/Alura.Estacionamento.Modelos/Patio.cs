@@ -18,6 +18,10 @@ namespace Alura.Estacionamento.Modelos
         }
         private List<Veiculo> veiculos;
         private double faturado;
+        private Operador _operadorPatio;
+
+
+        public Operador Operador { get=> _operadorPatio; set=> _operadorPatio=value; }
         public double Faturado { get => faturado; set => faturado = value; }
         public List<Veiculo> Veiculos { get => veiculos; set => veiculos = value; }       
         public double TotalFaturado()
@@ -33,7 +37,8 @@ namespace Alura.Estacionamento.Modelos
 
         public void RegistrarEntradaVeiculo(Veiculo veiculo)
         {
-            veiculo.HoraEntrada = DateTime.Now;            
+            veiculo.HoraEntrada = DateTime.Now;
+            this.GeraTicket(veiculo);
             this.Veiculos.Add(veiculo);            
         }
 
@@ -83,9 +88,37 @@ namespace Alura.Estacionamento.Modelos
             return informacao;
         }
 
-        
+        public Veiculo PesquisaVeiculo(string ticket)
+        {
+            Veiculo encontrado = (from veiculo in this.veiculos
+                              where veiculo.IdTicket == ticket
+                              select veiculo).SingleOrDefault();
 
-       
-    
+            return encontrado;
+        }
+
+        public Veiculo AlteraDadosVeiculos(Veiculo veiculoAlterado)
+        {
+            Veiculo encontrado = (from veiculo in this.veiculos
+                                  where veiculo.Placa == veiculoAlterado.Placa
+                                  select veiculo).SingleOrDefault();
+
+            encontrado.AlterarDados(veiculoAlterado);
+
+            return encontrado;
+        }
+
+        private string GeraTicket(Veiculo Veiculo)
+        {
+            Veiculo.IdTicket = new Guid().ToString().Substring(0, 5);
+            string ticket = "### Ticket Estacionamento Alura ###" +
+                $"Identificador: {Veiculo.IdTicket}" +
+                $"Data/Hora de entrada: {DateTime.Now}" +
+                $"Placa Veículo: {Veiculo.Placa}" +
+                $"Operador: {this.Operador.Nome}";
+
+            Veiculo.Ticket = ticket;
+            return ticket;
+        }
     }
 }
